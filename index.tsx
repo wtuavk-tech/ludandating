@@ -503,14 +503,11 @@ const TooltipCell = ({ content, maxWidthClass, showTooltip }: { content: string,
   </div>
 );
 
-const CombinedIdCell = ({ orderNo, workOrderNo, hasAdvancePayment, depositAmount }: { orderNo: string, workOrderNo: string, hasAdvancePayment: boolean, depositAmount?: number }) => (
+const CombinedIdCell = ({ orderNo, hasAdvancePayment, depositAmount }: { orderNo: string, hasAdvancePayment: boolean, depositAmount?: number }) => (
   <div className="flex flex-col">
     <div className="flex items-center gap-1">
       <span className="text-[12px] font-mono text-slate-600">{orderNo}</span>
       <button className="text-slate-400 hover:text-blue-500"><Copy size={10} /></button>
-    </div>
-    <div className="flex items-center gap-1">
-      <span className="text-[11px] font-mono text-slate-400">{workOrderNo}</span>
     </div>
     <div className="flex gap-1 mt-0.5">
        {hasAdvancePayment && <span className="text-[9px] bg-indigo-50 text-indigo-600 px-1 rounded border border-indigo-100">垫</span>}
@@ -937,7 +934,7 @@ const App = () => {
                   <th className="px-2 py-2 max-w-[120px] whitespace-nowrap bg-slate-50 sticky top-0 z-30">详细地址</th> 
                   <th className="px-2 py-2 max-w-[140px] whitespace-nowrap bg-slate-50 sticky top-0 z-30">详情</th>
                   
-                  <th className="px-2 py-2 whitespace-nowrap w-[160px] bg-slate-50 sticky top-0 z-30">订单/工单号</th>
+                  <th className="px-2 py-2 whitespace-nowrap w-[160px] bg-slate-50 sticky top-0 z-30">订单号</th>
                   <th className="px-2 py-2 whitespace-nowrap w-[110px] bg-slate-50 sticky top-0 z-30">录单/上门</th>
 
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">质保期</th>
@@ -1009,7 +1006,7 @@ const App = () => {
                     
                     {/* 订单/工单号: 不变 */}
                     <td className="px-2 py-2 align-middle" onMouseEnter={handleMouseEnterOther}>
-                        <CombinedIdCell orderNo={order.orderNo} workOrderNo={order.workOrderNo} hasAdvancePayment={order.hasAdvancePayment} depositAmount={order.depositAmount} />
+                        <CombinedIdCell orderNo={order.orderNo} hasAdvancePayment={order.hasAdvancePayment} depositAmount={order.depositAmount} />
                     </td>
 
                     {/* 录单/上门时间: 不变 */}
