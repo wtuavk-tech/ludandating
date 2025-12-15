@@ -108,6 +108,7 @@ interface Order {
   voidDetails: string;     // 作废详情
   cancelReasonAndDetails: string; // 取消原因/取消详情
   favoriteRemark: string;  // 收藏备注
+  score: string;           // 加分/扣分 (修改为字符串，支持 +2/-1 格式)
 }
 
 // --- 辅助函数 ---
@@ -170,6 +171,16 @@ const generateMockData = (): Order[] => {
     // Create historical price range
     const minPrice = Math.floor(amount * 0.8);
     const maxPrice = Math.floor(amount * 1.2);
+    
+    // Score generation (Strict Rule: Every row has data. If deduction, must have bonus in front.)
+    // Format: "+2" or "+2/-1"
+    const bonus = Math.floor(Math.random() * 10) + 1; // Always have a bonus 1-10
+    const hasDeduction = Math.random() > 0.5; // 50% chance of deduction
+    let scoreStr = `+${bonus}`;
+    if (hasDeduction) {
+        const deduction = Math.floor(Math.random() * 5) + 1;
+        scoreStr += `/-${deduction}`;
+    }
 
     return {
       id,
@@ -223,6 +234,7 @@ const generateMockData = (): Order[] => {
       voidDetails: status === OrderStatus.Void ? '客户表示暂时不需要服务了' : '',
       cancelReasonAndDetails: '',
       favoriteRemark: i % 10 === 0 ? '优质客户，下次优先' : '',
+      score: scoreStr
     };
   });
 };
@@ -274,10 +286,19 @@ const DataOverview = ({ isSearchOpen, onToggleSearch }: { isSearchOpen: boolean;
           <div className="flex items-center gap-8 text-xs whitespace-nowrap">
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">录单数</span><span className="text-lg font-bold text-slate-800">156</span></div>
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">报错数</span><span className="text-lg font-bold text-red-500">12</span></div>
+             
+             {/* 3 Existing Score Items */}
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当天分</span><span className="text-lg font-bold text-emerald-600">+85</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月分</span><span className="text-lg font-bold text-emerald-600">+1240</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当天扣分</span><span className="text-lg font-bold text-red-500">-2</span></div>
+             
+             {/* 4 Existing Monthly Items */}
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月总录单数</span><span className="text-lg font-bold text-blue-600">3,420</span></div>
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月转化率</span><span className="text-lg font-bold text-green-600">68.5%</span></div>
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标录单数</span><span className="text-lg font-bold text-slate-800">5,000</span></div>
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标转化率</span><span className="text-lg font-bold text-slate-800">70%</span></div>
+
+             {/* New 10th Item */}
              <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标咨询数差值</span><span className="text-lg font-bold text-orange-600">-128</span></div>
           </div>
        </div>
@@ -888,18 +909,21 @@ const App = () => {
         /* --- 4. 定位与视觉分割 --- */
         
         /* 联系人列 (最左边的固定列) */
+        /* Updated: Reduced right value to 110px and width logic to close gap */
         .sticky-right-contact {
-          right: 150px !important;
+          right: 110px !important;
           border-left: 1px solid #cbd5e1 !important; /* 左侧实体分割线 */
           box-shadow: -6px 0 10px -4px rgba(0,0,0,0.15); /* 左侧投影，营造悬浮感 */
         }
         
         /* 催单列 */
+        /* Updated: Reduced right value to 50px */
         .sticky-right-remind {
-          right: 70px !important;
+          right: 50px !important;
         }
         
         /* 操作列 */
+        /* Updated: Reduced right value to 0px */
         .sticky-right-action {
           right: 0px !important;
         }
@@ -936,29 +960,35 @@ const App = () => {
                   
                   <th className="px-2 py-2 whitespace-nowrap w-[160px] bg-slate-50 sticky top-0 z-30">订单号</th>
                   <th className="px-2 py-2 whitespace-nowrap w-[110px] bg-slate-50 sticky top-0 z-30">录单/上门</th>
+                  
+                  {/* New Column: 加分/扣分 */}
+                  <th className="px-2 py-2 whitespace-nowrap w-[80px] bg-slate-50 text-center sticky top-0 z-30">加分/扣分</th>
 
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">质保期</th>
+                  {/* REMOVED: Warranty Period column */}
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">工作机</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">客户姓名</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">派单员</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">录单员</th>
                   
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">总收款</th>
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">成本</th>
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">业绩</th>
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">实付金额</th>
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">服务时间</th>
+                  {/* REMOVED: Total Receipt, Cost, Revenue, Actual Paid */}
+
+                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">服务/派单</th>
+                  {/* Moved Favorite Remark column here */}
+                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 sticky top-0 z-30 max-w-[150px]">收藏备注</th>
+
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">完成时间</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">收款时间</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 text-center sticky top-0 z-30">作废人/原因</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 sticky top-0 z-30 max-w-[150px]">作废详情</th>
                   <th className="px-2 py-2 whitespace-nowrap bg-slate-50 sticky top-0 z-30 max-w-[150px]">取消原因/详情</th>
-                  <th className="px-2 py-2 whitespace-nowrap bg-slate-50 sticky top-0 z-30 max-w-[150px]">收藏备注</th>
-
+                  
                   {/* --- 固定列 (联系人, 催单, 操作) --- */}
-                  <th className="px-2 py-2 whitespace-nowrap text-center min-w-[200px] w-[200px] sticky-th-solid sticky-col sticky-right-contact">联系人</th>
-                  <th className="px-2 py-2 whitespace-nowrap text-center w-[80px] sticky-th-solid sticky-col sticky-right-remind border-l border-gray-200">催单</th> 
-                  <th className="px-2 py-2 text-center sticky-th-solid sticky-col sticky-right-action whitespace-nowrap w-[70px] border-l border-gray-200">操作</th>
+                  {/* Reduced width from 120px to 85px (approx 30%) */}
+                  <th className="px-2 py-2 whitespace-nowrap text-center min-w-[85px] w-[85px] sticky-th-solid sticky-col sticky-right-contact">联系人</th>
+                  {/* Reduced width to 60px */}
+                  <th className="px-2 py-2 whitespace-nowrap text-center w-[60px] sticky-th-solid sticky-col sticky-right-remind border-l border-gray-200">催单</th> 
+                  {/* Reduced width to 50px */}
+                  <th className="px-2 py-2 text-center sticky-th-solid sticky-col sticky-right-action whitespace-nowrap w-[50px] border-l border-gray-200">操作</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
@@ -1014,10 +1044,22 @@ const App = () => {
                         <CombinedTimeCell recordTime={order.recordTime} dispatchTime={order.dispatchTime} />
                     </td>
 
+                    {/* New Column: 加分/扣分 */}
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-bold text-[13px]">
+                        {order.score.includes('/') ? (
+                            <span>
+                                <span className="text-green-600">{order.score.split('/')[0]}</span>
+                                <span className="text-slate-300 mx-0.5">/</span>
+                                <span className="text-red-600">{order.score.split('/')[1]}</span>
+                            </span>
+                        ) : (
+                            <span className="text-green-600">{order.score}</span>
+                        )}
+                    </td>
+
                     {/* REMOVED: Resource, HasCoupon, IsCouponVerified, IsRead, IsCalled */}
                     
-                    {/* 增加字号 */}
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px]">{order.warrantyPeriod}</td>
+                    {/* REMOVED: Warranty Period column */}
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px]">{order.workPhone}</td>
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-700 font-medium text-[13px]">{order.customerName}</td>
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px]">{order.dispatcherName}</td>
@@ -1025,15 +1067,19 @@ const App = () => {
                     
                     {/* REMOVED: Master/Phone */}
                     
-                    {/* 增加字号 */}
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-mono text-emerald-600 font-bold text-[13px]">{formatCurrency(order.totalReceipt)}</td>
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-mono text-slate-500 text-[13px]">{formatCurrency(order.cost)}</td>
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-mono text-orange-600 font-bold text-[13px]">{formatCurrency(order.revenue)}</td>
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-mono text-slate-700 text-[13px]">{formatCurrency(order.actualPaid)}</td>
-                    {/* REMOVED: AdvancePayment, OtherReceipt, CompletionIncome */}
+                    {/* REMOVED: Total Receipt, Cost, Revenue, Actual Paid columns */}
                     
-                    {/* 时间列: 增加字号 */}
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">{order.serviceTime || '-'}</td>
+                    {/* 时间列: 增加字号 & 增加派单时间 */}
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">
+                        <div className="flex flex-col gap-1 items-center">
+                            <span>{order.serviceTime || '-'}</span>
+                            <span className="text-[11px] text-slate-400" title="派单时间">{order.dispatchTime}</span>
+                        </div>
+                    </td>
+
+                    {/* Moved Favorite Remark column here */}
+                    <td className="px-2 py-2 align-middle whitespace-nowrap text-slate-500 text-[12px]">{order.favoriteRemark || '-'}</td>
+
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">{order.completionTime || '-'}</td>
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">{order.paymentTime || '-'}</td>
                     
@@ -1041,16 +1087,15 @@ const App = () => {
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-500 text-[12px]">{order.voiderNameAndReason || '-'}</td>
                     <td className="px-2 py-2 align-middle whitespace-nowrap"><TooltipCell content={order.voidDetails || '-'} maxWidthClass="max-w-[150px]" showTooltip={false} /></td>
                     <td className="px-2 py-2 align-middle whitespace-nowrap"><TooltipCell content={order.cancelReasonAndDetails || '-'} maxWidthClass="max-w-[150px]" showTooltip={false} /></td>
-                    <td className="px-2 py-2 align-middle whitespace-nowrap text-slate-500 text-[12px]">{order.favoriteRemark || '-'}</td>
 
 
                     {/* --- 固定列 (联系人, 催单, 操作) --- */}
                     <td className="px-2 py-2 align-middle text-center sticky-col sticky-right-contact sticky-bg-solid" onMouseEnter={handleMouseEnterOther}>
-                      <div className="grid grid-cols-2 gap-2 p-1 w-full">
-                        <button onClick={() => handleOpenChat('派单员', order)} className="text-[11px] w-full py-1 px-1 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">派单员</button>
-                        <button onClick={() => handleOpenChat('运营', order)} className="text-[11px] w-full py-1 px-1 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">运营</button>
-                        <button onClick={() => handleOpenChat('售后', order)} className="text-[11px] w-full py-1 px-1 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">售后</button>
-                        <button onClick={() => handleOpenChat('群聊', order)} className="text-[11px] w-full py-1 px-1 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">群聊</button>
+                      <div className="grid grid-cols-2 gap-1 p-0.5 w-full">
+                        <button onClick={() => handleOpenChat('派单员', order)} className="text-[8px] w-full py-0.5 px-0.5 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">派单员</button>
+                        <button onClick={() => handleOpenChat('运营', order)} className="text-[8px] w-full py-0.5 px-0.5 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">运营</button>
+                        <button onClick={() => handleOpenChat('售后', order)} className="text-[8px] w-full py-0.5 px-0.5 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">售后</button>
+                        <button onClick={() => handleOpenChat('群聊', order)} className="text-[8px] w-full py-0.5 px-0.5 rounded border border-slate-300 bg-white hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-colors whitespace-nowrap font-medium shadow-sm">群聊</button>
                       </div>
                     </td>
                     <td className="px-2 py-2 align-middle text-center sticky-col sticky-right-remind sticky-bg-solid border-l border-gray-200" onMouseEnter={handleMouseEnterOther}><ReminderCell order={order} onRemind={handleRemindOrder} /></td>
