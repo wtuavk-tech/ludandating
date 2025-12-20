@@ -854,7 +854,7 @@ const App = () => {
   const handleMouseEnterOther = () => { setHoveredTooltipCell(null); };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-200 to-slate-300 p-6 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-slate-200 to-slate-300 p-3 flex flex-col overflow-hidden">
       <style>{`
         /* 
          * 核心优化：强制覆盖表格层级和背景，解决右侧固定列穿插问题
@@ -928,7 +928,7 @@ const App = () => {
           right: 0px !important;
         }
       `}</style>
-      <div className="max-w-[1800px] mx-auto w-full flex-1 flex flex-col h-full">
+      <div className="w-full flex-1 flex flex-col h-full">
         
         <NotificationBar />
         
