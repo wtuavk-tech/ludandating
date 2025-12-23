@@ -699,11 +699,24 @@ const Pagination = ({ total, current, pageSize, onPageChange, onSizeChange }: { 
 };
 
 const RecordOrderModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   if (!isOpen) return null;
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   
   return createPortal(
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-lg shadow-2xl w-[900px] max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-lg shadow-2xl w-[1100px] max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
          {/* Header */}
          <div className="flex items-center justify-between px-6 py-4 border-b">
            <h3 className="text-base font-bold text-slate-800">新增订单</h3>
@@ -741,63 +754,100 @@ const RecordOrderModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                          <textarea className="flex-1 h-16 px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300 resize-none" placeholder="请输入详情"></textarea>
                     </div>
 
-                    {/* Time Selection (Boxed) */}
+                    {/* NEW LAYOUT: Time Selection (Left) and 2x2 Grid (Right) */}
                     <div className="flex items-start gap-3">
                         <label className="text-sm text-slate-600 w-20 text-right mt-2">期望时间</label>
-                        <div className="flex-1 border-2 border-dashed border-blue-200 bg-blue-50/30 rounded-lg p-4 space-y-3">
-                            <div className="flex items-center gap-6">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" defaultChecked />
-                                    <span className="text-sm text-slate-700">尽快上门</span>
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" />
-                                    <span className="text-sm text-slate-700">先联系</span>
-                                </label>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <label className="flex items-center gap-2 cursor-pointer min-w-[20px]">
-                                    <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" />
-                                    <span className="text-sm text-slate-700 font-medium whitespace-nowrap">希望日期：</span>
-                                </label>
-                                <div className="relative flex-1">
-                                    <input type="date" className="w-full h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" />
+                        <div className="flex-1 flex gap-4">
+                             {/* Left: Time Section */}
+                             <div className="flex-1 border-2 border-dashed border-blue-200 bg-blue-50/30 rounded-lg p-4 space-y-3">
+                                <div className="flex items-center gap-6">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" defaultChecked />
+                                        <span className="text-sm text-slate-700">尽快上门</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" />
+                                        <span className="text-sm text-slate-700">先联系</span>
+                                    </label>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <label className="flex items-center gap-2 cursor-pointer min-w-[20px]">
+                                        <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" />
+                                        <span className="text-sm text-slate-700 font-medium whitespace-nowrap">希望日期：</span>
+                                    </label>
+                                    <div className="relative flex-1">
+                                        <input type="date" className="w-full h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" />
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-sm text-slate-700 font-medium whitespace-nowrap pl-7">希望时间：</span>
+                                    <div className="flex items-center gap-2 flex-1">
+                                        <input type="time" className="flex-1 h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" placeholder="选择开始时段" />
+                                        <span className="text-slate-400">-</span>
+                                        <input type="time" className="flex-1 h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" placeholder="选择结束时段" />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm text-slate-700 font-medium whitespace-nowrap pl-7">希望时间：</span>
-                                <div className="flex items-center gap-2 flex-1">
-                                    <input type="time" className="flex-1 h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" placeholder="选择开始时段" />
-                                    <span className="text-slate-400">-</span>
-                                    <input type="time" className="flex-1 h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" placeholder="选择结束时段" />
+                            
+                            {/* Right: 2x2 Grid (Mobile, Customer, Source, WorkPhone) */}
+                            <div className="w-[320px] grid grid-cols-2 gap-3 shrink-0">
+                                {/* Mobile */}
+                                <div className="col-span-1 min-w-0">
+                                    <div className="flex items-center border border-slate-300 rounded overflow-hidden h-9 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500">
+                                        <div className="bg-slate-50 px-2 text-xs text-slate-500 border-r border-slate-200 h-full flex items-center shrink-0 w-12 justify-center">手机</div>
+                                        <input type="text" className="w-full h-full px-2 text-sm focus:outline-none min-w-0" placeholder="号码" />
+                                    </div>
+                                </div>
+                                {/* Customer */}
+                                <div className="col-span-1 min-w-0">
+                                    <div className="flex items-center border border-slate-300 rounded overflow-hidden h-9 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500">
+                                        <div className="bg-slate-50 px-2 text-xs text-slate-500 border-r border-slate-200 h-full flex items-center shrink-0 w-12 justify-center">客户</div>
+                                        <input type="text" className="w-full h-full px-2 text-sm focus:outline-none min-w-0" placeholder="姓名" />
+                                    </div>
+                                </div>
+                                 {/* Source */}
+                                <div className="col-span-1 min-w-0">
+                                    <div className="flex items-center border border-slate-300 rounded overflow-hidden h-9 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500">
+                                        <div className="bg-slate-50 px-2 text-xs text-slate-500 border-r border-slate-200 h-full flex items-center shrink-0 w-12 justify-center">来源</div>
+                                        <select className="w-full h-full px-1 text-sm focus:outline-none bg-white text-slate-700 min-w-0 appearance-none cursor-pointer">
+                                            <option>电话</option>
+                                            <option>小程序</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                 {/* WorkPhone */}
+                                <div className="col-span-1 min-w-0">
+                                    <div className="flex items-center border border-slate-300 rounded overflow-hidden h-9 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500">
+                                        <div className="bg-slate-50 px-2 text-xs text-slate-500 border-r border-slate-200 h-full flex items-center shrink-0 w-12 justify-center">工作机</div>
+                                        <input type="text" className="w-full h-full px-2 text-sm focus:outline-none min-w-0" placeholder="搜索" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Mobile & Extension */}
-                    <div className="flex items-center gap-3">
-                         <label className="text-sm text-slate-600 w-20 text-right"><span className="text-red-500 mr-1">*</span>手机号码</label>
-                         <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入手机号码" />
-                         <input type="text" className="w-24 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="分机号" />
-                    </div>
-
-                    {/* Customer Name */}
-                    <div className="flex items-center gap-3">
-                         <label className="text-sm text-slate-600 w-20 text-right">客户名称</label>
-                         <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入内容" />
-                    </div>
-
-                    {/* Source & Work Phone */}
-                    <div className="flex items-center gap-3">
-                         <label className="text-sm text-slate-600 w-20 text-right"><span className="text-red-500 mr-1">*</span>订单来源</label>
-                         <select className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600 bg-white">
-                            <option>请选择</option>
-                            <option>电话</option>
-                            <option>小程序</option>
-                         </select>
-                         <label className="text-sm text-slate-600 whitespace-nowrap ml-2"><span className="text-red-500 mr-1">*</span>工作机</label>
-                         <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入关键词搜索" />
+                    {/* Image Upload Row */}
+                    <div className="flex items-start gap-3">
+                         <label className="text-sm text-slate-600 w-20 text-right mt-2">图片上传</label>
+                         <div className="flex-1">
+                            {!imagePreview ? (
+                                <label className="border-2 border-dashed border-slate-300 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 hover:border-blue-400 transition-colors h-24 w-full">
+                                    <Upload className="text-slate-400 mb-2" size={20} />
+                                    <span className="text-xs text-slate-500">点击上传图片</span>
+                                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                                </label>
+                            ) : (
+                                <div className="relative w-fit group">
+                                    <img src={imagePreview} alt="Preview" className="h-24 w-auto rounded border border-slate-200 object-cover" />
+                                    <button 
+                                        onClick={() => setImagePreview(null)}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            )}
+                         </div>
                     </div>
                 </div>
 
