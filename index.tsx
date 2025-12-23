@@ -700,40 +700,155 @@ const Pagination = ({ total, current, pageSize, onPageChange, onSizeChange }: { 
 
 const RecordOrderModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
   if (!isOpen) return null;
+  
   return createPortal(
-    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-xl shadow-2xl w-[600px] max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
-         <div className="flex items-center justify-between p-4 border-b">
-           <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-             <Plus className="text-blue-600" size={20} />
-             录入新订单
-           </h3>
+    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-lg shadow-2xl w-[900px] max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+         {/* Header */}
+         <div className="flex items-center justify-between px-6 py-4 border-b">
+           <h3 className="text-base font-bold text-slate-800">新增订单</h3>
            <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
          </div>
-         <div className="p-6 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-               <div>
-                 <label className="block text-sm font-medium text-slate-700 mb-1">客户手机</label>
-                 <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="输入手机号自动匹配" />
-               </div>
-               <div>
-                 <label className="block text-sm font-medium text-slate-700 mb-1">服务项目</label>
-                 <select className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <option>家庭保洁日常</option>
-                    <option>深度家电清洗</option>
-                 </select>
-               </div>
-            </div>
-            {/* More form fields mock */}
-            <div className="p-4 bg-blue-50 text-blue-800 rounded text-sm text-center">
-               此处为表单录入区域（Mock）
+         
+         {/* Body */}
+         <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex gap-8">
+                {/* Left Form Column */}
+                <div className="flex-1 space-y-4">
+                    {/* Service Item */}
+                    <div className="flex items-center gap-3">
+                        <label className="text-sm text-slate-600 w-20 text-right"><span className="text-red-500 mr-1">*</span>服务项目</label>
+                        <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入关键词搜索" />
+                        <label className="text-sm text-slate-600 whitespace-nowrap ml-2">质保期：</label>
+                        <span className="text-sm text-slate-500">展示质保期</span>
+                    </div>
+                    
+                    {/* Region */}
+                    <div className="flex items-center gap-3">
+                        <label className="text-sm text-slate-600 w-20 text-right"><span className="text-red-500 mr-1">*</span>地域</label>
+                        <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入关键词搜索" />
+                    </div>
+
+                    {/* Address */}
+                    <div className="flex items-start gap-3">
+                        <label className="text-sm text-slate-600 w-20 text-right mt-2"><span className="text-red-500 mr-1">*</span>地址</label>
+                        <textarea className="flex-1 h-16 px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300 resize-none" placeholder="请输入内容"></textarea>
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex items-start gap-3">
+                         <label className="text-sm text-slate-600 w-20 text-right mt-2">详情</label>
+                         <textarea className="flex-1 h-16 px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300 resize-none" placeholder="请输入详情"></textarea>
+                    </div>
+
+                    {/* Time Selection (Boxed) */}
+                    <div className="flex items-start gap-3">
+                        <label className="text-sm text-slate-600 w-20 text-right mt-2">期望时间</label>
+                        <div className="flex-1 border-2 border-dashed border-blue-200 bg-blue-50/30 rounded-lg p-4 space-y-3">
+                            <div className="flex items-center gap-6">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" defaultChecked />
+                                    <span className="text-sm text-slate-700">尽快上门</span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" />
+                                    <span className="text-sm text-slate-700">先联系</span>
+                                </label>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <label className="flex items-center gap-2 cursor-pointer min-w-[20px]">
+                                    <input type="radio" name="timeType" className="text-blue-600 focus:ring-blue-500" />
+                                    <span className="text-sm text-slate-700 font-medium whitespace-nowrap">希望日期：</span>
+                                </label>
+                                <div className="relative flex-1">
+                                    <input type="date" className="w-full h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" />
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm text-slate-700 font-medium whitespace-nowrap pl-7">希望时间：</span>
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input type="time" className="flex-1 h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" placeholder="选择开始时段" />
+                                    <span className="text-slate-400">-</span>
+                                    <input type="time" className="flex-1 h-8 px-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600" placeholder="选择结束时段" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile & Extension */}
+                    <div className="flex items-center gap-3">
+                         <label className="text-sm text-slate-600 w-20 text-right"><span className="text-red-500 mr-1">*</span>手机号码</label>
+                         <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入手机号码" />
+                         <input type="text" className="w-24 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="分机号" />
+                    </div>
+
+                    {/* Customer Name */}
+                    <div className="flex items-center gap-3">
+                         <label className="text-sm text-slate-600 w-20 text-right">客户名称</label>
+                         <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入内容" />
+                    </div>
+
+                    {/* Source & Work Phone */}
+                    <div className="flex items-center gap-3">
+                         <label className="text-sm text-slate-600 w-20 text-right"><span className="text-red-500 mr-1">*</span>订单来源</label>
+                         <select className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 text-slate-600 bg-white">
+                            <option>请选择</option>
+                            <option>电话</option>
+                            <option>小程序</option>
+                         </select>
+                         <label className="text-sm text-slate-600 whitespace-nowrap ml-2"><span className="text-red-500 mr-1">*</span>工作机</label>
+                         <input type="text" className="flex-1 h-9 px-3 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-300" placeholder="请输入关键词搜索" />
+                    </div>
+                </div>
+
+                {/* Right Smart Recognition Column */}
+                <div className="w-[300px] flex flex-col gap-4">
+                    <textarea 
+                        className="w-full h-40 border border-slate-300 rounded p-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-400 resize-none"
+                        placeholder="在此粘贴或输入内容，自动识别手机号码、服务项目、地址等信息"
+                    ></textarea>
+                    
+                    <div className="text-xs text-slate-400 space-y-3">
+                        <p>例如：</p>
+                        <p>【客】, iyang761227,13801109798，北京市海淀区，南四环.益桥附近，燃气灶维修，点不着火，上门费30，下单30，咨询</p>
+                        <p>美团，18613313500，保定市竞秀区，建南街道，租摄影棚，未报价，27</p>
+                        <p>线7，18729306628，陕西省西安市雁塔区，西安高新华府，打印机维修，小问题维修100，已加微信，定全30，住这儿</p>
+                    </div>
+
+                    <div className="flex items-center gap-4 mt-2">
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1.5 rounded transition-colors shadow-sm">自动识别</button>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <div className="relative inline-block w-8 h-4 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="toggle" className="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600"/>
+                                <label htmlFor="toggle" className="toggle-label block overflow-hidden h-4 rounded-full bg-slate-300 cursor-pointer"></label>
+                            </div>
+                            <span className="text-xs text-slate-700 font-bold">自动获取价格</span>
+                        </label>
+                    </div>
+                    
+                    <div className="mt-2 text-sm text-slate-800 font-medium cursor-pointer hover:text-blue-600">
+                        草稿暂存区
+                    </div>
+                </div>
             </div>
          </div>
-         <div className="p-4 border-t bg-slate-50 flex justify-end gap-3">
-            <button onClick={onClose} className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-200 rounded transition-colors">取消</button>
-            <button onClick={onClose} className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md transition-colors">确认录入</button>
+         
+         {/* Footer */}
+         <div className="p-4 border-t bg-white flex justify-end gap-3 items-center">
+            <button className="px-4 py-2 text-sm bg-[#84cc16] hover:bg-[#65a30d] text-white rounded transition-colors font-medium">存入草稿箱</button>
+            <button onClick={onClose} className="px-4 py-2 text-sm text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded transition-colors">取消</button>
+            <button onClick={onClose} className="px-6 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md transition-colors">确定</button>
          </div>
       </div>
+      <style>{`
+        .toggle-checkbox:checked {
+          right: 0;
+          border-color: #2563eb;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+          background-color: #2563eb;
+        }
+      `}</style>
     </div>,
     document.body
   );
