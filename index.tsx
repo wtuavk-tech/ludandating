@@ -264,7 +264,7 @@ const NotificationBar = () => {
         </div>
       </div>
       
-      <div className="bg-[#1e293b] text-slate-400 text-xs px-3 py-1 rounded border border-slate-700 shrink-0 font-medium tracking-wider">
+      <div className="bg-[#1e293b] text-slate-400 text-xs px-3 py-1 rounded border border-slate-700 shrink-0 font-medium tracking-wider font-mono">
         2025-11-19
       </div>
 
@@ -294,22 +294,22 @@ const DataOverview = ({ isSearchOpen, onToggleSearch }: { isSearchOpen: boolean;
              <span className="font-bold text-slate-800 text-sm">数据概览</span>
           </div>
           <div className="flex items-center gap-8 text-xs whitespace-nowrap">
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">录单数</span><span className="text-lg font-bold text-slate-800">156</span></div>
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">报错数</span><span className="text-lg font-bold text-red-500">12</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">录单数</span><span className="text-lg font-bold text-slate-800 font-mono">156</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">报错数</span><span className="text-lg font-bold text-red-500 font-mono">12</span></div>
              
              {/* 3 Existing Score Items */}
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当天分</span><span className="text-lg font-bold text-emerald-600">+85</span></div>
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月分</span><span className="text-lg font-bold text-emerald-600">+1240</span></div>
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当天扣分</span><span className="text-lg font-bold text-red-500">-2</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当天分</span><span className="text-lg font-bold text-emerald-600 font-mono">+85</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月分</span><span className="text-lg font-bold text-emerald-600 font-mono">+1240</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当天扣分</span><span className="text-lg font-bold text-red-500 font-mono">-2</span></div>
              
              {/* 4 Existing Monthly Items */}
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月总录单数</span><span className="text-lg font-bold text-blue-600">3,420</span></div>
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月转化率</span><span className="text-lg font-bold text-green-600">68.5%</span></div>
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标录单数</span><span className="text-lg font-bold text-slate-800">5,000</span></div>
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标转化率</span><span className="text-lg font-bold text-slate-800">70%</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月总录单数</span><span className="text-lg font-bold text-blue-600 font-mono">3,420</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月转化率</span><span className="text-lg font-bold text-green-600 font-mono">68.5%</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标录单数</span><span className="text-lg font-bold text-slate-800 font-mono">5,000</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标转化率</span><span className="text-lg font-bold text-slate-800 font-mono">70%</span></div>
 
              {/* New 10th Item */}
-             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标咨询数差值</span><span className="text-lg font-bold text-orange-600">-128</span></div>
+             <div className="flex items-baseline gap-1.5"><span className="text-slate-500">当月目标咨询数差值</span><span className="text-lg font-bold text-orange-600 font-mono">-128</span></div>
           </div>
        </div>
        
@@ -466,9 +466,9 @@ const SearchPanel = ({ isOpen }: { isOpen: boolean; onToggle?: () => void }) => 
                   </div>
                   <div className="flex items-center gap-2 bg-white border border-blue-200 rounded px-2 h-8 flex-1">
                      <Calendar size={14} className="text-slate-400" />
-                     <input type="datetime-local" className="bg-transparent text-xs text-slate-600 outline-none flex-1 min-w-0" />
+                     <input type="datetime-local" className="bg-transparent text-xs text-slate-600 outline-none flex-1 min-w-0 font-mono" />
                      <span className="text-slate-300">-</span>
-                     <input type="datetime-local" className="bg-transparent text-xs text-slate-600 outline-none flex-1 min-w-0" />
+                     <input type="datetime-local" className="bg-transparent text-xs text-slate-600 outline-none flex-1 min-w-0 font-mono" />
                   </div>
               </div>
 
@@ -542,7 +542,7 @@ const CombinedIdCell = ({ orderNo, hasAdvancePayment, depositAmount }: { orderNo
     </div>
     <div className="flex gap-1 mt-0.5">
        {hasAdvancePayment && <span className="text-[9px] bg-indigo-50 text-indigo-600 px-1 rounded border border-indigo-100">垫</span>}
-       {depositAmount && <span className="text-[9px] bg-pink-50 text-pink-600 px-1 rounded border border-pink-100">定¥{depositAmount}</span>}
+       {depositAmount && <span className="text-[9px] bg-pink-50 text-pink-600 px-1 rounded border border-pink-100 font-mono">定¥{depositAmount}</span>}
     </div>
   </div>
 );
@@ -551,11 +551,11 @@ const CombinedTimeCell = ({ recordTime, dispatchTime }: { recordTime: string, di
    <div className="flex flex-col gap-0.5">
       <div className="flex items-center gap-1 text-[11px] text-slate-500" title="录单时间">
          <Clock size={10} className="shrink-0" />
-         <span className="whitespace-nowrap">{recordTime.split(' ')[0]}</span>
+         <span className="whitespace-nowrap font-mono">{recordTime.split(' ')[0]}</span>
       </div>
       <div className="flex items-center gap-1 text-[11px] text-blue-600 font-medium" title="上门时间">
          <MapPin size={10} className="shrink-0" />
-         <span className="whitespace-nowrap">{dispatchTime}</span>
+         <span className="whitespace-nowrap font-mono">{dispatchTime}</span>
       </div>
    </div>
 );
@@ -655,7 +655,7 @@ const Pagination = ({ total, current, pageSize, onPageChange, onSizeChange }: { 
            <ChevronLeft size={14} />
          </button>
          
-         <div className="flex items-center gap-1">
+         <div className="flex items-center gap-1 font-mono">
             <span className="font-medium text-slate-900">{current}</span>
             <span className="text-slate-400">/</span>
             <span>{totalPages}</span>
@@ -684,7 +684,7 @@ const Pagination = ({ total, current, pageSize, onPageChange, onSizeChange }: { 
          <span>跳至</span>
          <input 
            type="number" 
-           className="w-12 h-8 border border-gray-200 rounded px-2 text-center outline-none focus:border-blue-500 bg-slate-50"
+           className="w-12 h-8 border border-gray-200 rounded px-2 text-center outline-none focus:border-blue-500 bg-slate-50 font-mono"
            onKeyDown={(e) => {
              if (e.key === 'Enter') {
                const val = parseInt((e.target as HTMLInputElement).value);
@@ -920,8 +920,8 @@ const CompleteOrderModal = ({ isOpen, onClose, order }: { isOpen: boolean, onClo
             <p className="text-slate-600 mb-4">确认将订单 <span className="font-mono font-bold text-slate-900">{order.orderNo}</span> 标记为完成？</p>
             
             <div className="bg-slate-50 p-3 rounded mb-4 text-sm space-y-2">
-               <div className="flex justify-between"><span>服务金额:</span> <span className="font-bold">¥{order.totalAmount}</span></div>
-               <div className="flex justify-between"><span>实际收款:</span> <span className="font-bold text-green-600">¥{order.actualPaid}</span></div>
+               <div className="flex justify-between"><span>服务金额:</span> <span className="font-bold font-mono">¥{order.totalAmount}</span></div>
+               <div className="flex justify-between"><span>实际收款:</span> <span className="font-bold text-green-600 font-mono">¥{order.actualPaid}</span></div>
             </div>
 
             <div className="flex items-start gap-2 text-orange-600 text-xs bg-orange-50 p-2 rounded">
@@ -1171,7 +1171,7 @@ const App = () => {
                   <tr key={order.id} onMouseLeave={handleMouseEnterOther} className="bg-white even:bg-blue-50 hover:!bg-blue-100 transition-colors group border-b border-gray-300 last:border-0 align-middle">
                     
                     {/* 手机号: 增加字号 */}
-                    <td className="px-2 py-2 text-slate-800 font-bold text-[12px] tabular-nums whitespace-nowrap align-middle text-center" onMouseEnter={handleMouseEnterOther}>{order.mobile}</td>
+                    <td className="px-2 py-2 text-slate-800 font-bold text-[12px] tabular-nums whitespace-nowrap align-middle text-center font-mono" onMouseEnter={handleMouseEnterOther}>{order.mobile}</td>
                     
                     {/* 服务项目: 增加字号 */}
                     <td className="px-2 py-2 align-middle whitespace-nowrap" onMouseEnter={handleMouseEnterOther}>
@@ -1191,7 +1191,7 @@ const App = () => {
                     <td className="px-2 py-2 text-slate-700 whitespace-nowrap align-middle text-center text-[12px]" onMouseEnter={handleMouseEnterOther}>
                         <div className="relative pr-8 inline-block"> 
                             {order.region}
-                            <span className="absolute bottom-0 right-0 text-[9px] text-blue-600 border border-blue-200 bg-blue-50 px-1 rounded">
+                            <span className="absolute bottom-0 right-0 text-[9px] text-blue-600 border border-blue-200 bg-blue-50 px-1 rounded font-mono">
                               {order.regionPeople}人
                             </span>
                         </div>
@@ -1220,7 +1220,7 @@ const App = () => {
                     </td>
 
                     {/* New Column: 加分/扣分 */}
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-bold text-[13px]">
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap font-bold text-[13px] font-mono">
                         {order.score.includes('/') ? (
                             <span>
                                 <span className="text-green-600">{order.score.split('/')[0]}</span>
@@ -1235,7 +1235,7 @@ const App = () => {
                     {/* REMOVED: Resource, HasCoupon, IsCouponVerified, IsRead, IsCalled */}
                     
                     {/* REMOVED: Warranty Period column */}
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px]">{order.workPhone}</td>
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px] font-mono">{order.workPhone}</td>
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-700 font-medium text-[13px]">{order.customerName}</td>
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px]">{order.dispatcherName}</td>
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-600 text-[13px]">{order.recorderName}</td>
@@ -1245,7 +1245,7 @@ const App = () => {
                     {/* REMOVED: Total Receipt, Cost, Revenue, Actual Paid columns */}
                     
                     {/* 时间列: 增加字号 & 增加派单时间 */}
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500 font-mono">
                         <div className="flex flex-col gap-1 items-center">
                             <span>{order.serviceTime || '-'}</span>
                             <span className="text-[11px] text-slate-400" title="派单时间">{order.dispatchTime}</span>
@@ -1255,8 +1255,8 @@ const App = () => {
                     {/* Moved Favorite Remark column here */}
                     <td className="px-2 py-2 align-middle whitespace-nowrap text-slate-500 text-[12px]">{order.favoriteRemark || '-'}</td>
 
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">{order.completionTime || '-'}</td>
-                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500">{order.paymentTime || '-'}</td>
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500 font-mono">{order.completionTime || '-'}</td>
+                    <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-[12px] text-slate-500 font-mono">{order.paymentTime || '-'}</td>
                     
                     {/* 增加字号 */}
                     <td className="px-2 py-2 align-middle text-center whitespace-nowrap text-slate-500 text-[12px]">{order.voiderNameAndReason || '-'}</td>
