@@ -42,7 +42,9 @@ import {
   Eye,
   Phone,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Edit,
+  Receipt
 } from 'lucide-react';
 
 // --- 类型定义 ---
@@ -602,7 +604,7 @@ const ActionCell = ({ orderId, onAction }: { orderId: number, onAction: (action:
           const rect = buttonRef.current.getBoundingClientRect();
           setMenuPosition({ 
             top: rect.top, 
-            left: rect.left - 120 
+            left: rect.left - 130 
           });
       }
       setIsOpen(!isOpen);
@@ -622,15 +624,21 @@ const ActionCell = ({ orderId, onAction }: { orderId: number, onAction: (action:
         <>
            <div className="fixed inset-0 z-[9998]" onClick={() => setIsOpen(false)}></div>
            <div 
-             className="fixed z-[9999] w-28 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200"
+             className="fixed z-[9999] w-36 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200"
              style={{ 
                top: menuPosition.top, 
                left: menuPosition.left 
              }}
            >
               <button onClick={() => { onAction('详情', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><FileText size={14}/> 详情</button>
-              <button onClick={() => { onAction('添加报错', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2"><AlertTriangle size={14}/> 添加报错</button>
-              <button onClick={() => { onAction('其他收款', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-green-50 hover:text-green-600 flex items-center gap-2"><DollarSign size={14}/> 其他收款</button>
+              <button onClick={() => { onAction('短信发送详情', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><MessageCircle size={14}/> 短信发送详情</button>
+              <button onClick={() => { onAction('修改', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><Edit size={14}/> 修改</button>
+              <button onClick={() => { onAction('催单', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><Bell size={14}/> 催单</button>
+              <button onClick={() => { onAction('开票', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><Receipt size={14}/> 开票</button>
+              <button onClick={() => { onAction('复制订单', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><Copy size={14}/> 复制订单</button>
+              <button onClick={() => { onAction('待办', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><ClipboardList size={14}/> 待办</button>
+              <button onClick={() => { onAction('特殊单', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><AlertTriangle size={14}/> 特殊单</button>
+              <button onClick={() => { onAction('新需求', orderId); setIsOpen(false); }} className="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"><Zap size={14}/> 新需求</button>
            </div>
         </>,
         document.body
